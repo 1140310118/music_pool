@@ -1,0 +1,239 @@
+{% load staticfiles %}
+<html>
+	<head>
+		<link href='http://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css'>
+		<!-- <meta charset="GB18030"> -->
+		<title>详细信息</title>
+		<link href="{% static 'music_pool/menu/style.css' %}" media="screen" rel="stylesheet" type="text/css" />
+		<link href="{% static 'music_pool/menu/iconic.css' %}" media="screen" rel="stylesheet" type="text/css" />
+		<link href="{% static 'music_pool/tablecloth/tablecloth.css' %}" rel="stylesheet" type="text/css" media="screen" />
+		<link rel="import" href="{% static 'music_pool/nav.html' %}" id="page1">
+		<script src="{% static 'music_pool/menu/prefix-free.js' %}"></script>
+		<script src="{% static 'music_pool/tablecloth/tablecloth.js' %}" type="text/javascript"></script>
+		<style>
+			
+			body{
+				margin:0;
+				padding:0;
+				font:70% Arial, Helvetica, sans-serif; 
+				color:#555;
+				line-height:150%;
+				text-align:left;
+			}
+			a{
+				text-decoration:none;
+				color:#057fac;
+			}
+			a:hover{
+				text-decoration:none;
+				color:#999;
+			}
+			h1{
+				font-size:140%;
+				margin:0 20px;
+				line-height:80px;	
+			}
+			h2{
+				font-size:120%;
+			}
+			#container{
+				margin:0 auto;
+				width:680px;
+				background:#fff;
+				padding-bottom:20px;
+			}
+			#content{margin:0 20px;}
+			p.sig{	
+				margin:0 auto;
+				width:680px;
+				padding:1em 0;
+			}
+			form{
+				margin:1em 0;
+				padding:.2em 20px;
+				background:#eee;
+			}
+		</style>
+	</head>
+	
+	<body>
+	<div id="nav"></div>
+	<script type="text/javascript">
+		$("#nav").load("{% static 'music_pool/nav.html' %}")
+	</script>
+	
+	
+	<div id="container">
+	<div id="content">
+		<br><br>
+		<table>
+
+		{% if performer %}
+			{%if performer.band_flag %}
+				<tr>
+					<th>组合名称</th>					
+					<th>地区</th>
+					<th>成员</th>
+					<th>唱片公司</th>
+				</tr>
+				<tr>
+					<td>{{performer.performer.name}}</td>
+					<td>{{performer.performer.region}}</td>
+					{% if performer.members %}
+						<td>
+						{% for singer in performer.members %}
+							<a href='/music_pool/singer/{{singer.id}}'>
+								{{singer.name}}
+							</a>
+						{% endfor %}
+						</td>
+					{% endif %}
+					{% if performer.company %}
+						<td><a href='/music_pool/company/{{performer.company.id}}'>
+							{{performer.company.name}}
+						</a></td>
+					{% endif %}
+				</tr>
+			{% else %}
+				<tr>
+					<th>姓名</th>
+					<th>性别</th>
+					<th>地区</th>
+					<th>唱片公司</th>
+				</tr>	
+				<tr>
+					<td>{{performer.performer.name}}</td>
+					<td>{{performer.performer.gender}}</td>
+					<td>{{performer.performer.region}}</td>
+					{% if performer.company %}
+						<td><a href='/music_pool/company/{{performer.company.id}}'>
+							{{performer.company.name}}
+						</a></td>
+					{% endif %}
+				</tr>
+			{% endif %}
+		{% endif %}
+
+		{% if performers %}
+			<tr>
+				<th>组合名称/姓名</th>
+				<th>性别</th>					
+				<th>地区</th>
+				<th>唱片公司</th>
+			</tr>
+			{% for performer in performers%}
+			<tr>
+				<td><a href="/music_pool/performer/{{performer.performer_id}}">
+					{{performer.name}}
+				</a><td>
+				<!-- <td> -->
+					{% if performer.gender %}
+						{{performer.gender}}
+					{% endif %}
+				<!-- </td> -->
+				<td>
+					{% if performer.region %}
+						{{performer.region}}
+					{% endif %}
+				</td>
+				<td>
+					{% if performer.company_name %}
+						<a href="/music_pool/company/{{performer.company_id}}">
+							{{performer.company_name}}
+						</a>
+					{% endif %}
+				</td>
+			</tr>
+			{% endfor %}
+		{% endif %}
+
+		{% if company %}
+			<tr>
+				<th>公司名称</th>					
+				<th>地区</th>
+				<th>建立时间</th>
+			</tr>
+			<tr>
+				<td>{{company.company.name}}</td>
+				<td>{{company.company.region}}</td>
+				<td>{{company.company.established_time}}</td>
+			</tr>
+			<tr>
+				<th>公司旗下歌手/组合</th>	
+			</tr>
+			{% for performer in company.performers %}
+				<tr><td>
+					<a href='/music_pool/performer/{{performer.performer_id}}'>
+						{{performer.name}}
+					</a>
+				</td></td></tr>
+			{% endfor %}	
+		{% endif %}
+
+
+		{% if album %}
+			<tr>
+				<th>专辑名称</th>					
+				<th>发布时间</th>
+				<th>主打歌</th>
+			</tr>
+			<tr>
+				<td>{{album.name}}</td>
+				<td>{{album.issue_data}}</td>
+				<td><a href="/music_pool/song/{{album.title_song_id}}">
+					{{album.title_song_name}}
+				</a></td>
+			
+			</tr>
+			<tr>
+				<th>歌曲列表</th>	
+			</tr>
+			{% for song in album_songs %}
+				<tr><td>
+					<a href='/music_pool/song/{{song.song_id}}'>
+						{{song.song_name}}
+					</a>
+				</td></td></tr>
+			{% endfor %}	
+		{% endif %}
+
+		{% if albums %}
+			<tr>
+				<th>专辑名称</th>					
+				<th>发布时间</th>
+				<th>主打歌</th>
+			</tr>
+			{% for album in albums %}
+				
+				<tr>
+					<td><a href="/music_pool/album/{{album.id}}">
+						{{album.name}}
+					</a></td>
+					<td>{{album.issue_data}}</td>
+					<td><a href="/music_pool/song/{{album.title_song_id}}">
+						{{album.title_song_name}}
+					</a></td>
+				
+				</tr>
+			{% endfor %}	
+		{% endif %}
+
+		{% if singer %}
+			<tr>
+				<th>姓名</th>
+				<th>性别</th>
+				<th>地区</th>
+			</tr>	
+
+			<tr>
+				<td>{{singer.name}}</td>
+				<td>{{singer.gender}}</td>
+				<td>{{singer.region}}</td>
+			</tr>
+		{% endif %}
+		</table>
+	</div>
+	</div>
+	</body>
+
+</html>

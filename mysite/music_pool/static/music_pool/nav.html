@@ -1,0 +1,47 @@
+{% load staticfiles %}
+<html>
+	<head>
+		<link href='http://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css'>
+		<link href="{% static 'music_pool/menu/style.css' %}" media="screen" rel="stylesheet" type="text/css" />
+		<link href="{% static 'music_pool/menu/iconic.css' %}" media="screen" rel="stylesheet" type="text/css" />
+		<link href="{% static 'music_pool/tablecloth/tablecloth.css' %}" rel="stylesheet" type="text/css" media="screen" />
+
+		<script src="http://code.jquery.com/jquery-1.8.0.min.js"></script>
+		<script src="{% static 'music_pool/menu/prefix-free.js' %}"></script>
+		<script src="{% static 'music_pool/tablecloth/tablecloth.js' %}" type="text/javascript"></script>
+		
+	</head>
+	
+<body>
+	
+	<div class="wrap">
+	<nav>
+		<ul class="menu">
+			<!-- <a href='/music_pool/singer/{{performer.id}}'>{{performer.name}}</a> -->
+			<li><a href="/music_pool/"><span class="iconic home"></span> 音乐</a></li>
+			<li><a><span class="iconic magnifying-glass"></span>查看</a>
+				<ul>
+					<li><a href="/music_pool/song">音乐列表</a></li>
+					<li><a href="/music_pool/album">专辑列表</a></li>
+					<li><a href="/music_pool/performer">演唱者列表</a></li>
+				</ul>
+			</li>
+			<li><a><span class="iconic map-pin"></span>管理</a>
+				<ul>
+					<li><a href="/music_pool/song_manage">管理音乐</a></li>
+					<li><a href="/music_pool/album_manage">管理专辑</a></li>
+					<li><a href="/music_pool/performer_manage">管理演唱者</a></li>
+				</ul>
+			</li>
+			<li><a><span class="iconic mail"></span> 联系我们</a>
+			</li>
+
+			<li><a><span class="iconic plus-alt"></span> 关于我们</a>
+			</li>
+		</ul>
+		<div class="clearfix"></div>
+	</nav>
+	</div>
+</body>
+
+</html>

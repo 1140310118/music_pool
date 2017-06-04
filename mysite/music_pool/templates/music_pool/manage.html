@@ -1,0 +1,223 @@
+{% load staticfiles %}
+<html>
+	<head>
+		<link href='http://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css'>
+		<!-- <meta charset="GB18030"> -->
+		<title>详细信息</title>
+		<link href="{% static 'music_pool/menu/style.css' %}" media="screen" rel="stylesheet" type="text/css" />
+		<link href="{% static 'music_pool/menu/iconic.css' %}" media="screen" rel="stylesheet" type="text/css" />
+		<link href="{% static 'music_pool/tablecloth/tablecloth.css' %}" rel="stylesheet" type="text/css" media="screen" />
+		<!-- <link rel="import" href="{% static 'music_pool/nav.html' %}" id="page1"> -->
+		<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+ 
+		<script src="{% static 'music_pool/menu/prefix-free.js' %}"></script>
+		<script src="{% static 'music_pool/tablecloth/tablecloth.js' %}" type="text/javascript"></script>
+
+		<style>
+			
+			body{
+				margin:0;
+				padding:0;
+				font:70% Arial, Helvetica, sans-serif; 
+				color:#555;
+				line-height:150%;
+				text-align:left;
+			}
+			a{
+				text-decoration:none;
+				color:#057fac;
+			}
+			a:hover{
+				text-decoration:none;
+				color:#999;
+			}
+			h1{
+				font-size:140%;
+				margin:0 20px;
+				line-height:80px;	
+			}
+			h2{
+				font-size:120%;
+			}
+			#container{
+				margin:0 auto;
+				width:680px;
+				background:#fff;
+				padding-bottom:20px;
+			}
+			#content{margin:0 20px;}
+			p.sig{	
+				margin:0 auto;
+				width:680px;
+				padding:1em 0;
+			}
+			form{
+				margin:1em 0;
+				padding:.2em 20px;
+				background:#eee;
+			}
+		</style>
+	</head>
+	
+	<body>
+	<div id="nav"></div>
+	<script type="text/javascript">
+		$("#nav").load("{% static 'music_pool/nav.html' %}")
+	</script>
+	<!-- <object style="border:0px" type="text/x-scriptlet" data="{% static 'music_pool/nav.html' %}" width=100% height=30></object>  -->
+	
+	
+	<div id="container">
+	<div id="content">
+		<br><br>
+		{% if modify_flag %}
+		<table>
+			<tr>
+				<th style="width:80px">音乐标题{{modify_song.performer.performer_ID}}</th>
+				<th style="width:80px">歌手</th>
+				<th style="width:8px">专辑</th>
+				<th style="width:80px">时长</th>
+				<th style="width:80px">发布日期</th>
+				<th style="width:80px">风格</th>
+			</tr>
+			{% for sperformer in modify_song.performers %}
+			<form action="/music_pool/song_modify_j/" method='post'>
+			{% csrf_token %} 
+				<tr>
+					<td>
+					<input type="text"  name="song_name" style="width:80px" required value="{{modify_song.song.name}}"/></td>
+					<td>
+						<!-- <input type="text"  name="singer" style="width:80px"/> -->
+
+						<select name='performer' id="slt" >
+							<option value ="0">无</option> 
+							{% for performer in performer_list %}
+								<option value ="{{performer.performer_id}}">{{performer.name}}</option> 
+							{% endfor %}
+						</select>
+						
+					</td>
+					<td>
+						<select name='album' id="slt2">
+							<option value ="0">无</option> 
+							{% for album in album_list %}
+								<option value ="{{album.id}}">{{album.name}}</option> 
+							{% endfor %}
+						</select>
+						<script>
+						   document.getElementById("slt").value = "{{sperformer.performer_ID}}";
+						   document.getElementById("slt2").value = "{{modify_song.album.album_id}}";
+						</script>
+					</td>
+					<td><input type="text"  name="duration" style="width:80px" value="{{modify_song.song.duration}}"/></td>
+					<td><input type="text"  name="issue_date" style="width:80px" value="{{modify_song.song.issue_date}}"/></td>
+					<td><input type="text"  name="style" style="width:80px" value="{{modify_song.song.style}}"/></td>
+					<td><input type="text"  name="song_id" style="width:80px" value="{{modify_song.song.id}}" style="display: none"/></td>
+					<td><input type="submit" value="提交"/></td>
+				</tr>
+			</form>
+			{% endfor %}
+		</table>
+		{% endif %}
+
+		<table>
+			<tr>
+				<th>音乐标题</th>
+				<th>歌手</th>
+				<th>专辑</th>
+				<th>时长</th>
+				<th>发布日期</th>
+				<th>风格</th>
+			</tr>	
+
+		{% if sfs_list %}
+			{% for sfs in sfs_list %}
+			
+				<tr>
+					<td>{{sfs.song.name}}</td>
+					<td>
+					{% for performer in sfs.performers %}
+						<a href='/music_pool/performer/{{performer.performer_ID}}'>{{performer.name}}</a>
+					{% endfor %}
+						
+					</td>
+					<td><a href="/music_pool/album/{{sfs.album.album_id}}">
+						{{sfs.album.album_name}}
+					</a></td>
+					
+					<td>{{sfs.song.duration}}</td>
+					<td>{{sfs.song.issue_date}}</td>
+					<td>{{sfs.song.style}}</td>
+					<td><a href="/music_pool/song_delete/{{sfs.song.id}}">
+						<button>删除</button>
+					</a></td>
+					<td><a href="/music_pool/song_modify/{{sfs.song.id}}">
+						<button>修改</button>
+					</a></td>
+				</tr>	
+			{% endfor %}
+		{% endif %}
+
+		{% if sfs %}
+			<tr>
+				<td>{{sfs.song.name}}</td>
+				<td>
+				{% for performer in sfs.performers %}
+					<a href='/music_pool/performer/{{performer.performer_ID}}'>{{performer.name}}</a>
+				{% endfor %}
+					
+				</td>
+				<td><a href="/music_pool/album/{{sfs.album.album_id}}">
+					{{sfs.album.album_name}}
+				</a></td>
+				
+				<td>{{sfs.song.duration}}</td>
+				<td>{{sfs.song.issue_date}}</td>
+				<td>{{sfs.song.style}}</td>
+			</tr>	
+		{% endif %}
+
+		</table>
+		<table>
+			<tr>
+				<th style="width:80px">音乐标题</th>
+				<th style="width:80px">歌手</th>
+				<th style="width:8px">专辑</th>
+				<th style="width:80px">时长</th>
+				<th style="width:80px">发布日期</th>
+				<th style="width:80px">风格</th>
+			</tr>
+			<form action="/music_pool/song_insert/" method='post'>
+			{% csrf_token %} 
+				<tr>
+					<td><input type="text"  name="song_name" style="width:80px" required /></td>
+					<td>
+						<!-- <input type="text"  name="singer" style="width:80px"/> -->
+
+						<select name='performer'>
+							<option value ="0">无</option> 
+							{% for performer in performer_list %}
+								<option value ="{{performer.performer_id}}">{{performer.name}}</option> 
+							{% endfor %}
+						</select>
+					</td>
+					<td>
+						<select name='album'>
+							<option value ="0">无</option> 
+							{% for album in album_list %}
+								<option value ="{{album.id}}">{{album.name}}</option> 
+							{% endfor %}
+						</select>
+					</td>
+					<td><input type="text"  name="duration" style="width:80px"/></td>
+					<td><input type="text"  name="issue_date" style="width:80px"/></td>
+					<td><input type="text"  name="style" style="width:80px"/></td>
+					<td><input type="submit" value="+"/></td>
+				</tr>
+			</form>
+		</table>
+	</div>
+	</div>
+	</body>
+
+</html>
